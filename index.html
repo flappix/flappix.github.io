@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <title>Secret Login</title>
 <meta name="generator" content="Geany 1.36" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 	body
 	{
@@ -19,17 +20,13 @@
 		width: 100%;
 	}
 	
-	#wrong
-	{
-		display: none;
-	}
 	
 	#wrong
 	{
 		color: red;
 	}
 	
-	#login, #email, #confirm
+	#login, #content, #emails, #files, #diary
 	{
 		margin: 0px auto;
 		background-color:rgba(255, 255, 255, 0.5);
@@ -41,10 +38,34 @@
 		text-align: center;
 	}
 	
+	#content2
+	{
+		display: flex;
+		justify-content: space-evenly;
+	}
+	
+	#wrong, #emails, #files, #content, #diary
+	{
+		display: none;
+	}
+	
+	.mail, #files
+	{
+		text-align: left;
+		margin-bottom: 20px;
+		padding: 20px;
+		background-color:rgba(255, 255, 255, 0.5);
+	}
+	
 	table
 	{
 		width: 80%;
 		margin: 0px auto;
+	}
+	
+	a {
+		color: black;
+		text-decoration: none;
 	}
 
 </style>
@@ -54,18 +75,80 @@
 	<div id="login">
 		<table>
 			<tr>
-				<td>Username</td>
+				<td>E-Mail Adresse</td>
 				<td><input type="text" name="user" /></td>
 			</tr>
 			<tr>
 				<td>Passwort</td>
-				<td><input type="password" name="pw" /></td>
+				<td><input placeholder="--------" type="password" name="pw" /></td>
 			</tr>
 		</table>
 		 <br />
 		 
 		<div id="wrong">Ung&uuml;tige Zugangsdaten</div>
 		<input type="submit" value="Einloggen" onclick="login()" /><br />
+	</div>
+	
+	<div id="content">
+		<div id="content2">
+			<div onclick="$('#content').hide();$('#emails').show();"><i class="fa fa-4x fa-envelope" aria-hidden="true"></i> Emails </div>
+			<div onclick="$('#content').hide();$('#files').show();"><i class="fa fa-4x fa-file" aria-hidden="true"></i> Dateien</div>
+		</div>
+	</div>
+	
+	<div id="emails">
+		<div class="mail">Von: Eduart<br />
+			Datum: 16.01.2021<br />
+			Betreff: Wo bleibt mein Geld?<br >
+			<hr />
+			Hatten wir beide nicht eine klare Vereinbarung? Ich hatte gehofft, dich nicht daran erinnern zu müssen, was mit Benjamin passiert ist, als er dachte, mich verarschen zu k&ouml;nnen.
+		</div>
+		
+		<div class="mail">Von: info@amazon.de<br />
+			Datum: 15.01.2021<br />
+			Betreff: Ihre Bestellung<br >
+			<hr />
+			Ihre Bestellung wurde versandt.
+		</div>
+		<div class="mail">Von: sissi@uni-wien.de<br />
+			Datum: 13.01.2021<br />
+			Betreff: Re: Besuch<br >
+			<hr />
+			Hi Dad,<br />
+			ich bin dieses Wochenende leider nicht zu Hause, kannst du auch n&auml;chste Woche?<br />
+			Viele Gr&uuml;&szlig;e Sissi<br />
+		</div>
+		
+		<div class="mail">Von: Rosalie<br />
+			Datum: 13.01.2021<br />
+			Betreff: Paket abholen<br >
+			<hr />
+			hey schaz ich hate gehoft du kanst später bei der post vorbei faren und mein paket abholen. danke, hab dich lib <i class="fa fa-heart" style="color:red;" aria-hidden="true"></i>
+		</div>
+		
+		<div class="mail">Von: sexyhexy09@web.de<br />
+			Datum: 11.01.2021<br />
+			Betreff: <br >
+			<hr />
+			Lust auf was geiles? Guck doch mal hier: http://i.will.hack.u/dwhjw77wdidk
+		</div>
+		<button onclick="$('#content').show();$('#emails').hide();" style="font-size: 1.5em;">Zur&uuml;ck</button>
+	</div>
+	
+	<div id="files">
+		<div>
+			<a href="z-bild.jpeg" target="_blank"><i class="fa fa-3x fa-file" aria-hidden="true"></i> scan1.jpg</a><br /><br />
+			<span onclick="$('#files').hide();$('#diary').show()"><i class="fa fa-3x fa-file" aria-hidden="true"></i> tagebuch.docx</a><br />
+		</div>
+		<br />
+		<button onclick="$('#content').show();$('#files').hide();" style="font-size: 1.5em;">Zur&uuml;ck</button>
+	</div>
+	
+	<div id="diary">
+		Liebes Tagebuch,<br />
+		ich weiß weder ein noch aus. Meine Schulden <br />
+		<br />
+		<button onclick="$('#diary').hide();$('#files').show();" style="font-size: 1.5em;">Zur&uuml;ck</button>
 	</div>
 	
 	
@@ -91,14 +174,17 @@
 		let c = 1;
 		function login()
 		{
-			if ( $('[name=user]').val() == 'peter.mueller@gmx.de' && hashpw ($('[name=pw]').val()) == '-1089619350' )
+			$('#wrong').hide();
+			
+			if (( $('[name=user]').val() == 'peter.mueller@gmx.de' && hashpw ($('[name=pw]').val().toLowerCase()) == '1404039020' ) )
 			{
-				alert('right');
+				$('#login').hide();
+				$('#content').show();
 				$('#wrong').hide();
 			}
 			else
 			{
-				$('#wrong').show();
+				$('#wrong').fadeIn ('slow');
 			}
 		}	
 	</script>
