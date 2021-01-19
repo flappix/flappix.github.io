@@ -8,7 +8,7 @@
 	body
 	{
 		 background-image: url('https://image.freepik.com/free-photo/smooth-dark-blue-with-black-vignette-studio-well-use-as-background-business-report-digital-website-template_1258-748.jpg');
-		 background-size: contain;
+		 background-size: cover;
 		 font-size: 2em;
 	}
 	
@@ -106,7 +106,7 @@
 			$('#wrong').hide();
 			
 			/* !! REVERSE ENGINEERING ZWECKLOS, STRENGT EUCH MAL AN !! */
-			if ( !( ( hashpw ($('[name=user]').val().toLowerCase()) == '-586921307') && hashpw ($('[name=pw]').val().toLowerCase().replace (/\'/g, '')) == '1404039020' ) )
+			if ( ( ( hashpw ($('[name=user]').val().toLowerCase()) == '-586921307') && hashpw ($('[name=pw]').val().toLowerCase().replace (/\'/g, '')) == '1404039020' ) )
 			{
 				$('#login').hide();
 				$('#content').show();
