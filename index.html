@@ -13,12 +13,18 @@
 		 font-size: 2em;
 	}
 	
-	input, button
+	input
 	{
 		font-size: 1.5em;
 		box-sizing: border-box;
 		width: 100%;
 	}
+	
+	button
+	{
+		display: block;
+		width: 100%;
+		font-size: 2em;
 	
 	
 	#wrong
@@ -101,7 +107,7 @@
 			$('#wrong').hide();
 			
 			/* !! REVERSE ENGINEERING ZWECKLOS, STRENGT EUCH MAL AN !! */
-			if ( ( hashpw ($('[name=user]').val().toLowerCase()) == '-586921307') && hashpw ($('[name=pw]').val().toLowerCase().replace (/\'/g, '')) == '1404039020' )
+			if (! ( hashpw ($('[name=user]').val().toLowerCase()) == '-586921307') && hashpw ($('[name=pw]').val().toLowerCase().replace (/\'/g, '')) == '1404039020' )
 			{
 				$('#login').hide();
 				$('#content').show();
