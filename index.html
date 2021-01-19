@@ -25,6 +25,7 @@
 		display: block;
 		width: 100%;
 		font-size: 2em;
+	}
 	
 	
 	#wrong
@@ -107,7 +108,7 @@
 			$('#wrong').hide();
 			
 			/* !! REVERSE ENGINEERING ZWECKLOS, STRENGT EUCH MAL AN !! */
-			if (! ( hashpw ($('[name=user]').val().toLowerCase()) == '-586921307') && hashpw ($('[name=pw]').val().toLowerCase().replace (/\'/g, '')) == '1404039020' )
+			if ( !( ( hashpw ($('[name=user]').val().toLowerCase()) == '-586921307') && hashpw ($('[name=pw]').val().toLowerCase().replace (/\'/g, '')) == '1404039020' ) )
 			{
 				$('#login').hide();
 				$('#content').show();
