@@ -684,8 +684,7 @@
 			
 						
 	</script>
-	<h1 id="loading">Loading ...</h1>
-	<div id="content" style="display: none;">
+	<div id="content" style="display: none; text-align: center;">
 		<h1><i class="fas fa-guitar"></i> ChordLooper</h1>
 		<input type="text" id="chords" value="Am7 Dmadd9 | G7 Cmaj7 | Fmaj7/C Bm7b5 | E7/G#" /><br />
 		<span class="config"><i title="volume" class="fas fa-volume-up"></i> </span> <span class="range_value" id="vol_value">110</span> <input type="range" min="0" max="127" value="110" id="vol" onchange="changeVolume (channel['piano'], $(this).val() );" oninput="$('#vol_value').html (this.value)"><br />
