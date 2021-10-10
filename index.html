@@ -270,6 +270,7 @@
 			
 			// template chords
 			{name: 'add n', postfixStart: '<sup>add', postfixEnd: '</sup>', pattern: /^[a-g][#b]?add([b#]?[1-9]{1,2})(\/[a-g][#b]?)?$/i, notes: [0, 4, 7, 'n'], template: true},
+			{name: 'minor add n', postfixStart: 'm<sup>add', postfixEnd: '</sup>', pattern: /^[a-g][#b]?(m|min)add([b#]?[1-9]{1,2})(\/[a-g][#b]?)?$/i, notes: [0, 4, 7, 'n'], template: true},
 		];
 		
 		let scale_map = {
@@ -463,11 +464,13 @@
 										
 										if (p.template == true)
 										{
-											console.log (m[1]);
+											console.log (m);
+											let group = m.length - 1;
+											if (m[group] == null || m[group][0] == '/') group = m.length - 2;
 											chord = {
-												'notes': p.notes.map ( (x) => { return x == 'n' ? scale_map[m[1]] + root : x + root } ),
+												'notes': p.notes.map ( (x) => { return x == 'n' ? scale_map[m[group]] + root : x + root } ),
 												'duration': bar_length() / query_chords.length,
-												'symbol': c[0].toUpperCase() + ( c.length > 1 ? ( c[1] == '#' ? '#' : (c[1] == 'b' ? '♭' : '') ) : '' ) + p.postfixStart + m[1].replace (/b/g, '♭') + p.postfixEnd
+												'symbol': c[0].toUpperCase() + ( c.length > 1 ? ( c[1] == '#' ? '#' : (c[1] == 'b' ? '♭' : '') ) : '' ) + p.postfixStart + m[group].replace (/b/g, '♭') + p.postfixEnd
 											}
 										}
 										else
@@ -597,7 +600,8 @@
 			}
 			else
 			{	
-				play_metronome = 'stop';
+				stop();
+				//play_metronome = 'stop';
 				//stopAllNotes();
 			}	
 		}
@@ -621,6 +625,25 @@
 			{
 				play_metronome = 'stop';
 			}
+			
+			$('#loop').attr ('disabled', 'disabled');
+			
+			function waitForConfirm()
+			{
+				console.log (play)
+				console.log (play_metronome)
+				 // wait for confirmation
+				if (play == false && play_metronome == false)
+				{
+					$('#loop').removeAttr ('disabled');
+				}
+				else
+				{
+					setTimeout (waitForConfirm, 500);
+				}
+			}
+			
+			waitForConfirm();
 		}
 		
 		function showExamples()
