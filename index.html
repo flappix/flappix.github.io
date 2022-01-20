@@ -357,7 +357,7 @@
 		
 		let last_chord;
 		
-		let humanize = 10;
+		let humanize = 20;
 		
 		function bar_length()
 		{
@@ -988,7 +988,7 @@
 		<span class="config"><i title="volume" class="fas fa-volume-up"></i> </span> <span class="range_value" id="vol_value">110</span> <input type="range" min="0" max="127" value="110" id="vol" onchange="changeVolume ('chord', $(this).val() );" oninput="$('#vol_value').html (this.value)"><br />
 		<span class="config"><i title="BPM" class="fas fa-heartbeat" id="bpm_icon" onclick="toggleMetronome()"></i> </span> <span class="range_value" id="bpm_value">80</span> <input type="range" min="20" max="300" value="80" id="bpm" onchange="changeBPM();" oninput="$('#bpm_value').html (this.value)"><br />
 		<span class="config"><i title="Metronome volume" class="fas fa-drum" id="bpm_icon"></i> </span> <span class="range_value" id="drum_volume_value">10</span> <input type="range" min="0" max="127" value="10" id="drum_volume" onchange="changeVolume ('drum', $(this).val() );" oninput="$('#drum_volume_value').html (this.value)"><br />
-		<span class="config"><i title="Humanize" class="fas fa-user" id="humanize_icon"></i> </span> <span class="range_value" id="humanize_value">10</span> <input type="range" min="0" max="127" value="10" id="humanize" onchange="changeHumanize();" oninput="$('#humanize_value').html (this.value)">
+		<span class="config"><i title="Humanize" class="fas fa-user" id="humanize_icon"></i> </span> <span class="range_value" id="humanize_value">20</span> <input type="range" min="0" max="127" value="10" id="humanize" onchange="changeHumanize();" oninput="$('#humanize_value').html (this.value)">
 		<div style="display: flex; justify-content: center; color: white;">
 			<div>Select chord sound <br /><select id="selectSound" onchange="selectSound()">
 				<option value="acoustic_grand_piano">Piano</option>
