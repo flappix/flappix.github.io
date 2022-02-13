@@ -926,6 +926,21 @@
 		function selectSound ()
 		{
 			MIDI.programChange (channel['chord'], MIDI.GM.byName[ $('#selectSound').val() ].number);
+			let o = $('#selectSound :selected');
+			if ( o.attr ('data-humanize') )
+			{
+				$('#humanize').val ( o.attr ('data-humanize') );
+				$('#humanize_value').html ( o.attr ('data-humanize') );
+				changeHumanize();
+			}
+			
+			if ( o.attr ('data-volume') )
+			{
+				$('#vol').val ( o.attr ('data-volume') );
+				$('#vol_value').html ( o.attr ('data-volume') );
+				changeVolume();
+			}
+			
 		}
 		
 		$(document).ready ( () => {
@@ -934,9 +949,11 @@
 				//soundfontUrl: "MIDI.js/examples/soundfont/",
 				soundfontUrl: "FluidR3_GM/",
 				
-				instruments: ['acoustic_grand_piano', 'acoustic_guitar_nylon', 'acoustic_guitar_steel', 'electric_guitar_clean', 'steel_drums'],
+				instruments: ['acoustic_grand_piano', 'acoustic_guitar_nylon', 'acoustic_guitar_steel', 'electric_guitar_clean', 'steel_drums', 'pad_2_warm'],
 				//instrument: 'acoustic_guitar_nylon',
 				onprogress: function(state, progress) {
+					console.log (state);
+					console.log (progress);
 					if (state == 'load')
 					{
 						$('#progress').html ( Math.round (progress * 100) + '%' );
@@ -1001,6 +1018,7 @@
 				<option value="acoustic_guitar_nylon">Classical guitar</option>
 				<option value="acoustic_guitar_steel">Western guitar</option>
 				<option value="electric_guitar_clean">Electric guitar clean</option>
+				<option value="pad_2_warm" data-humanize="0" data-volume="40">Pad</option>
 			</select></div>
 			<div>Select metronome sound <br /><select id="selectDrum" onchange="selectDrum()">
 				<option value="42">HiHat</option>
