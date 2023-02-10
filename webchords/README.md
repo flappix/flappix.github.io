@@ -1,9 +1,12 @@
 
-# chordlooper
+# WebChords
+
+![Screenshot](https://raw.githubusercontent.com/flappix/webchords/main/screenshot.jpg)
+
 
 Online tool for creating and looping complex, jazzy chord progression on the fly.
 
-**Try it on https://flappix.github.io/chordlooper**
+**Try it on https://flappix.github.io/webchords**
 
 ## Features
 - Chord recognition as you type on the keyboard
