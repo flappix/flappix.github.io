@@ -291,7 +291,7 @@
 	
 								<input type="text"
 									   x-model="scales[curr_scale].notes[n]"
-									   style="width: 50%;" :style="{'background-color': getFreq (n) == null ? 'red' : 'none'}" />
+									   style="width: 50%; text-align: end;" :style="{'background-color': getFreq (n) == null ? 'red' : 'none'}" />
 							</div>
 							<div style="display: flex; align-items: center; justify-content: space-between;">
 								<span style="width: 50%;">freq</span>
@@ -316,7 +316,10 @@
 							<!--<div x-html="JSON.stringify (playing.includes (n))"></div>-->
 							<div style="display: flex; justify-content: space-between;">
 								<div style="border: 1px solid black; padding: 5px; margin-bottom: 5px;" x-html="parseInt (k) + 1"></div>
-								<input type="text" class="kbc-button"  x-model="key_maps[curr_keymap][k]" style="width: 3em; text-align: center;" />
+								<input type="text"
+									   class="kbc-button"
+									   x-model="key_maps[curr_keymap][k]"
+									   style="width: 3em; text-align: center;" />
 								
 								<div x-on:click="delete key_maps[curr_keymap][k]" title="delete" style="cursor: pointer; font-family: monospace;">[x]</div>
 							</div>
