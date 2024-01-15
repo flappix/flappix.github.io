@@ -222,6 +222,19 @@
 		</script>
 
 		<style>
+			body {
+				background-color: #F2F2F2;
+			}
+			
+			.box {
+				background-color: white;
+			}
+			
+			div
+			{
+				border-radius: 0.3em;
+			}
+			
 			.playing {
 				background-color: lightblue;
 			}
@@ -229,7 +242,7 @@
 	</head>
 
 	<body x-data="ScaleApp()" x-on:keydown="key_check_on" x-on:keyup="key_check_off">
-		<div style="border: 1px solid black; padding: 0.5em; margin: 0.5em;">
+		<div style="border: 1px solid black; padding: 0.5em; margin: 0.5em;" class="box">
 			Scale <select x-model="curr_scale">
 				<template x-for="name in Object.keys (scales)">
 					<option x-html="name"></option>
@@ -256,6 +269,7 @@
 				<div style="display: flex; width: 100%; flex-wrap: wrap;">
 					<template x-for="(note, n) in scales[curr_scale].notes">
 						<div style="border: 1px solid black; margin: 0.5em; padding: 0.5em; width: 10%;"
+							 class="box"
 							 :class="{'playing': playing.map (p => p % scales[curr_scale].notes.length).includes ( n % scales[curr_scale].notes.length ) }">
 							<!--<div x-html="n"></div>
 							<div x-html="n % scales[curr_scale].notes.length"></div>
@@ -295,7 +309,9 @@
 					click on key to edit</span>
 				<div style="display: flex; width: 100%; flex-wrap: wrap;">
 					<template x-for="(key, k) in key_maps[curr_keymap]">
-						<div style="border: 1px solid black; margin: 0.5em; padding: 0.5em; width: 10%;" :class="{'playing': playing.includes ( String (k) ) }">
+						<div style="border: 1px solid black; margin: 0.5em; padding: 0.5em; width: 10%;"
+							 class="box"
+							 :class="{'playing': playing.includes ( String (k) ) }">
 							<!--<div x-html="JSON.stringify (playing.includes (n))"></div>-->
 							<div style="display: flex; justify-content: space-between;">
 								<div style="border: 1px solid black; padding: 5px; margin-bottom: 5px;" x-html="parseInt (k) + 1"></div>
