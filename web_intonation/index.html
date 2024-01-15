@@ -200,9 +200,9 @@
 				<span>Scale Type</span>:
 				<span x-html="scales[curr_scale].type"></span>
 			</div>-->
-			<div>
+			<div style="margin-top: 0.5em;">
 				<span>Root</span>:
-				<input type="number" x-model="scales[curr_scale].root" /> Hz
+				<input type="number" x-model="scales[curr_scale].root" style="width: 4em;" /> Hz
 			</div>
 		</div>
 		<div>
@@ -227,9 +227,9 @@
 									   :max="n < scales[curr_scale].notes.length ? scales[curr_scale].notes[n + 1]: 1"
 									   style="width: 50%;" />
 							</div>
-							<div>
-								freq
-								<span x-html="parseFloat ( String (scales[curr_scale].root * scales[curr_scale].notes[n]) ).toFixed(2);"></span> Hz
+							<div style="display: flex; align-items: center; justify-content: space-between;">
+								<span style="width: 50%;">freq</span>
+								<span style="font-family: monospace;" x-html="parseFloat ( String (scales[curr_scale].root * scales[curr_scale].notes[n]) ).toFixed(2);"></span> Hz
 							</div>
 							<!--<input type="text" x-model="key_maps[curr_keymap][n]" />-->
 						</div>
