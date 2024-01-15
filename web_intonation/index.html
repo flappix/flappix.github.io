@@ -217,7 +217,7 @@
 							<div x-html="JSON.stringify (playing.includes (n))"></div>-->
 							<div style="display: flex; justify-content: space-between;">
 								<div style="border: 1px solid black; padding: 5px;" x-html="n + 1"></div>
-								<div x-on:click="scales[curr_scale].notes.splice (n, 1);" title="delete" style="cursor: pointer;">x</div>
+								<div x-on:click="scales[curr_scale].notes.splice (n, 1);" title="delete" style="cursor: pointer; font-family: monospace;">[x]</div>
 							</div>
 							<div style="display: flex;">
 								<span style="width: 50%;">ratio</span>
@@ -249,7 +249,7 @@
 							<div style="display: flex; justify-content: space-between;">
 								<div style="border: 1px solid black; padding: 5px; margin-bottom: 5px;" x-html="parseInt (k) + 1"></div>
 								<input type="text" class="kbc-button"  x-model="key_maps[curr_keymap][k]" style="width: 20px;" />
-								<div x-on:click="delete key_maps[curr_keymap][k]" title="delete" style="cursor: pointer;">x</div>
+								<div x-on:click="delete key_maps[curr_keymap][k]" title="delete" style="cursor: pointer; font-family: monospace;">[x]</div>
 							</div>
 							<!--<input type="text" x-model="key_maps[curr_keymap][k]" />-->
 						</div>
