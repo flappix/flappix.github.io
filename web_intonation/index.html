@@ -254,14 +254,19 @@
 			.setting
 			{
 				margin: 0.5em;
+				align-items: center;
+				display: flex;
+				background-color: #F2F2F2;
+				padding: 0.5em;
 			}
 		</style>
 	</head>
 
 	<body x-data="ScaleApp()" x-on:keydown="key_check_on" x-on:keyup="key_check_off">
-		<div style="border: 1px solid black; padding: 0.5em; margin: 0.5em;" class="box">
+		<div style="display: flex; align-items: center; border: 1px solid black; padding: 0.5em; margin: 0.5em;" class="box">
 			<div class="setting">
-				Scale <select x-model="curr_scale">
+				<span style="margin-right: 0.2em;">Scale</span>
+				<select x-model="curr_scale">
 					<template x-for="name in Object.keys (scales)">
 						<option x-html="name"></option>
 					</template>
@@ -269,7 +274,8 @@
 			</div>
 			
 			<div class="setting">
-				Keyboard <select x-model="curr_keymap">
+				<span style="margin-right: 0.2em;">Keyboard</span>
+				<select x-model="curr_keymap">
 					<template x-for="name in Object.keys (key_maps)">
 						<option x-html="name"></option>
 					</template>
@@ -280,12 +286,12 @@
 				<span x-html="scales[curr_scale].type"></span>
 			</div>-->
 			<div class="setting">
-				<span>Root</span>:
-				<input type="number" x-model="scales[curr_scale].root" style="width: 4em;" /> Hz
+				<span style="margin-right: 0.2em;">Root</span>
+				<input type="number" x-model="scales[curr_scale].root" style="width: 4em; margin-right: 0.2em;" /> Hz
 			</div>
 		
 			<div class="setting">
-				<span>Volume</span>:
+				<span style="margin-right: 0.2em;">Volume</span>
 				<input type="range" min="0" max="1" step="0.01" x-model="volume.gain.value" />
 			</div>
 		</div>
@@ -328,7 +334,7 @@
 					<button x-on:click="add_scale_degree()" style="cursor: pointer; margin: 0.5em;" title="add scale degree">+</button>
 				</div>
 			</div>
-			<div>
+			<div style="margin-top: 1em;">
 				<div>
 					<span style="font-weight: bold;">Keyboard</span><br />
 					<span>press key to play note<br />
