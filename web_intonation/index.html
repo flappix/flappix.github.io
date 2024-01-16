@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<title>web Intonation</title>
-		<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 		<link rel="stylesheet" href="https://unpkg.com/keyboard-css@1.2.4/dist/css/main.min.css" />
 		<script src="https://cdn.jsdelivr.net/npm/mathjs@12.3.0/lib/browser/math.min.js"></script>
 
@@ -144,9 +144,7 @@
 					{
 						let keys = Object.keys (this.key_maps[this.curr_keymap]);
 						let last = keys[keys.length - 1];
-						console.log (keys);
 						this.key_maps[this.curr_keymap][parseInt (last) + 1] = '';
-						console.log (this.key_maps);
 					},
 					
 					
@@ -219,7 +217,7 @@
 				};
 			}
 			
-			Alpine.directive('debug', (el, { expression }, { evaluate }) => {
+			/*Alpine.directive('debug', (el, { expression }, { evaluate }) => {
 				el.style.backgroundColor = 'black'; 
 				el.style.fontFamily = 'monospace'; 
 				el.style.color = 'lightgreen'; 
@@ -230,7 +228,7 @@
 				let v = evaluate (expression);
 				console.log (v);
 				el.textContent = JSON.stringify (v, null, 2);
-			});
+			});*/
 		</script>
 
 		<style>
@@ -272,7 +270,6 @@
 					</template>
 				</select>
 			</div>
-			
 			<div class="setting">
 				<span style="margin-right: 0.2em;">Root</span>
 				<input type="number" x-model="scales[curr_scale].root" style="width: 4em; margin-right: 0.2em;" /> Hz
