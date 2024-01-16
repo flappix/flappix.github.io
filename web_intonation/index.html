@@ -274,6 +274,11 @@
 			</div>
 			
 			<div class="setting">
+				<span style="margin-right: 0.2em;">Root</span>
+				<input type="number" x-model="scales[curr_scale].root" style="width: 4em; margin-right: 0.2em;" /> Hz
+			</div>
+			
+			<div class="setting">
 				<span style="margin-right: 0.2em;">Keyboard</span>
 				<select x-model="curr_keymap">
 					<template x-for="name in Object.keys (key_maps)">
@@ -285,10 +290,6 @@
 				<span>Scale Type</span>:
 				<span x-html="scales[curr_scale].type"></span>
 			</div>-->
-			<div class="setting">
-				<span style="margin-right: 0.2em;">Root</span>
-				<input type="number" x-model="scales[curr_scale].root" style="width: 4em; margin-right: 0.2em;" /> Hz
-			</div>
 		
 			<div class="setting">
 				<span style="margin-right: 0.2em;">Volume</span>
