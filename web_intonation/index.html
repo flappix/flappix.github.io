@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<title>web Intonation</title>
-		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 		<link rel="stylesheet" href="https://unpkg.com/keyboard-css@1.2.4/dist/css/main.min.css" />
 		<script src="https://cdn.jsdelivr.net/npm/mathjs@12.3.0/lib/browser/math.min.js"></script>
 
@@ -10,25 +10,24 @@
 			function ScaleApp()
 			{
 				return {
+					init: function()
+					{
+						this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+						this.volume = this.audioCtx.createGain();
+						this.volume.connect (this.audioCtx.destination);
+						this.volume.gain.value = 0.03;
+					},
+					
 					oscillators: {},
 					playing: [], // currently active notes
+					volume: null,
 					createOscillator: function() {
-						if (this.audioCtx == null)
-						{
-							this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-						}
 						let oscillator = this.audioCtx.createOscillator();	
 						oscillator.type = 'sine';
-						
-						var volume = this.audioCtx.createGain();
-						volume.connect (this.audioCtx.destination);
-						volume.gain.value = 0.03;
-						
-						oscillator.connect (volume);
+						oscillator.connect (this.volume);
 						
 						return oscillator;
 					},
-					
 					playNote: function (degree)
 					{
 						if ( ! (degree in this.oscillators) )
@@ -219,6 +218,19 @@
 					}
 				};
 			}
+			
+			Alpine.directive('debug', (el, { expression }, { evaluate }) => {
+				el.style.backgroundColor = 'black'; 
+				el.style.fontFamily = 'monospace'; 
+				el.style.color = 'lightgreen'; 
+				el.style.fontWeight = 'bold'; 
+				el.style.padding = '0.5em'; 
+				el.style.whiteSpace = 'pre'; 
+				
+				let v = evaluate (expression);
+				console.log (v);
+				el.textContent = JSON.stringify (v, null, 2);
+			});
 		</script>
 
 		<style>
@@ -238,36 +250,49 @@
 			.playing {
 				background-color: lightblue;
 			}
+			
+			.setting
+			{
+				margin: 0.5em;
+			}
 		</style>
 	</head>
 
 	<body x-data="ScaleApp()" x-on:keydown="key_check_on" x-on:keyup="key_check_off">
 		<div style="border: 1px solid black; padding: 0.5em; margin: 0.5em;" class="box">
-			Scale <select x-model="curr_scale">
-				<template x-for="name in Object.keys (scales)">
-					<option x-html="name"></option>
-				</template>
-			</select>
+			<div class="setting">
+				Scale <select x-model="curr_scale">
+					<template x-for="name in Object.keys (scales)">
+						<option x-html="name"></option>
+					</template>
+				</select>
+			</div>
 			
-			Keyboard <select x-model="curr_keymap">
-				<template x-for="name in Object.keys (key_maps)">
-					<option x-html="name"></option>
-				</template>
-			</select>
+			<div class="setting">
+				Keyboard <select x-model="curr_keymap">
+					<template x-for="name in Object.keys (key_maps)">
+						<option x-html="name"></option>
+					</template>
+				</select>
+			</div>
 			<!--<div>
 				<span>Scale Type</span>:
 				<span x-html="scales[curr_scale].type"></span>
 			</div>-->
-			<div style="margin-top: 0.5em;">
+			<div class="setting">
 				<span>Root</span>:
 				<input type="number" x-model="scales[curr_scale].root" style="width: 4em;" /> Hz
+			</div>
+		
+			<div class="setting">
+				<span>Volume</span>:
+				<input type="range" min="0" max="1" step="0.01" x-model="volume.gain.value" />
 			</div>
 		</div>
 		<div>
 			<div>
 				<span style="font-weight: bold;">Scale</span>
-				<div style="display: flex; width: 100%; flex-wrap: wrap; align-self: stretch;
-  justify-content: stretch;">
+				<div style="display: flex; width: 100%; flex-wrap: wrap; align-self: stretch; justify-content: stretch;">
 					<template x-for="(note, n) in scales[curr_scale].notes">
 						<div style="border: 1px solid black; margin: 0.5em; padding: 0.5em; width: 10%;"
 							 class="box"
