@@ -15,9 +15,6 @@ function ScaleApp()
 		init: function()
 		{
 			this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-			//this.volume = this.audioCtx.createGain();
-			//this.volume.connect (this.audioCtx.destination);
-			//this.volume.gain.value = 0.01;
 			
 			this.curr_notes = this.createFromTemplate (this.curr_tuning, this.curr_scale);
 			this.pureIntervals = this.tunings.just_intonation.notes.map (n => math.simplify (n).toString() );
@@ -112,7 +109,7 @@ function ScaleApp()
 			scale: 'major',
 			degree: 0,
 		},
-		tab: 'tuning', // or 'synth'
+		tab: 'tuning', // or 'synth', 'midi'
 		harmonics: 0,
 		reduction: 0.5,
 		
@@ -177,8 +174,6 @@ function ScaleApp()
 				}
 				
 				setTimeout ( () => {
-					
-					//osc.disconnect (this.audioCtx.destination);
 					osc.envelope.gain.setValueAtTime (0, this.audioCtx.currentTime);
 					osc.envelope.disconnect (this.audioCtx.destination);
 					osc.stop();
@@ -197,7 +192,6 @@ function ScaleApp()
 		
 		getOctave: function (degree) {
 			let len = Object.values (this.curr_notes).length;
-			console.log ('len', len);
 			// transform octaves
 			let degree_adj = mod (degree,  len);
 			let octave = Math.floor (degree / len);
@@ -214,7 +208,6 @@ function ScaleApp()
 				
 				// transform octaves
 				const [degree_adj, octave] = this.getOctave (degree);
-				console.log ('play', degree, degree_adj, octave);
 				
 				// evaluate math expr to frequency
 				let freq = this.getFreq (degree_adj);
@@ -443,7 +436,7 @@ function ScaleApp()
 		},
 		
 		addPlotTrace: function (degree, octave) {
-			// this is slow, use setTimeout to dont block the main thread
+			// this is slow, use setTimeout to not block the main thread
 			setTimeout ( () => {
 				// calculate needed resolution
 				// TODO: higher resolution for higher octaves
@@ -542,7 +535,6 @@ function ScaleApp()
 		
 		key_check_off: function (event)
 		{
-			//this.key_check (event, this.stopNote);
 			let notes = this.get_note_by_key (event.key);
 			for (let note of notes)
 			{
@@ -607,35 +599,64 @@ function ScaleApp()
 		},
 		
 		calcNoteOffset: function() {
-			// first midi note is A 21
 			this.midi.note_offset = this.midi.scaleNotes.indexOf (this.midi.root);
-			console.log (this.midi.note_offset);
 		},
 		
 		midi_play: async function ()
 		{
-			//this.curr_scale = 'chromatic';
-			//this.curr_notes = this.createFromTemplate (this.curr_tuning, this.curr_scale);
+			let notes = this.midi.player.tracks.map ( track => track.notes.map ( note => {
+				// TODO: understand why we need - 69 + 12 -3 ?
+				let octave = Math.floor ( (note.midi - 69 + 12 - 3) / this.curr_notes.length);
+				let degree = mod (note.midi - 69 + 12 - 3, this.curr_notes.length);
+				note.n = degree + (octave * this.curr_notes.length) - this.midi.note_offset;
+				if (track.notes.indexOf (note) == track.notes.length - 1)
+				{
+					note.last = true;
+				}
+				return note;
+					
+			} ) ).flat();
+			console.log (notes);
 			
-			this.midi.player.tracks.forEach ( track => {
+			let d = Date.now();
+			for (let note of notes)
+			{
+				let timer = new Tock ( () => {		
+					//setTimeout ( () => {
+						this.playNote (note.n);
+					//}, 0);
+					
+					const timerStop = new Tock ( ()=> {
+						this.stopNote (note.n);
+						if (note.last)
+						{
+							this.midi.scheduledNotes = [];
+						}
+						
+						timerStop.stop();
+					}, ( note.durationTicks * (1/this.midi.tempo) ) - 350 );
+					timerStop.start();
+					
+					timer.stop();
+				}, note.ticks * (1/this.midi.tempo) );
+				
+				timer.start();
+				this.midi.scheduledNotes.push (timer);
+			
+			}
+			
+			/*this.midi.player.tracks.forEach ( track => {
 				const notes = track.notes;
 				notes.forEach ( note => {
 					
 					this.midi.scheduledNotes.push ( setTimeout ( () => {
-						console.log ('raw midi note', note.midi);
-						// TODO: understand do why we need - 69 + 12 -3 ?
-						let octave = Math.floor ( (note.midi - 69 + 12 - 3) / this.curr_notes.length);
-						let degree = mod (note.midi - 69 + 12 - 3, this.curr_notes.length);
-						let n = degree + (octave * this.curr_notes.length) - this.midi.note_offset;
-						console.log ('degree', degree);
-						console.log ('note', n);
-
-						this.playNote (n);
+						
+						//setTimeout ( () => {
+							this.playNote (n);
+						//}, 0);
+						
 						setTimeout ( () => {
-							console.log ('stop note', n);
 							this.stopNote (n);
-							
-							console.log ('lastNote', track.notes.indexOf (note) == track.notes.length - 1,track.notes.indexOf (note) );
 							if ( track.notes.indexOf (note) == track.notes.length - 1 )
 							{
 								this.midi.scheduledNotes = [];
@@ -643,7 +664,7 @@ function ScaleApp()
 						}, (note.durationTicks * (1/this.midi.tempo) ) - 350 );
 					}, note.ticks * (1/this.midi.tempo) ) );
 				});
-			});
+			});*/
 		},
 		
 		midi_stop: function() {
