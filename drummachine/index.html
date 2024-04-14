@@ -21,10 +21,11 @@
 				};
 				
 				this.recorder.onstop = (e) => {
-					const blob = new Blob (this.chunks, { type: "audio/ogg; codecs=opus" });
+					const blob = new Blob (this.chunks, { type: "audio/wav" });
 					this.chunks = [];
 					const audioURL = URL.createObjectURL (blob);
 					this.sample.src = audioURL;
+					this.sample.load();
 				};
 			},
 			toggleRecord: function () {
@@ -45,7 +46,7 @@
 	function DrumMachine() {
 		return {
 			tracks: [],
-			_init: function() {
+			init: function() {
 				let audio_context = new AudioContext;
 				let input = navigator.mediaDevices.getUserMedia ( {audio: true}).then ( (stream) => {
 					for (let i=0; i<4; i++)
@@ -119,7 +120,7 @@
 
 <body x-data="DrumMachine()">
 	<h1>DrumMachine</h1>
-	<button @click="_init()">Init</button>
+	<button @click="init()">Init</button>
 	<button @click="isPlaying = !isPlaying; play()" x-html="isPlaying ? 'stop' : 'play'"></button>
 	<table style="width: 100%; table-layout:fixed;">
 		<template x-for="track in tracks">
