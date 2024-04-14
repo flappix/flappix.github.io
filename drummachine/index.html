@@ -24,8 +24,19 @@
 					const blob = new Blob (this.chunks, { type: "audio/wav" });
 					this.chunks = [];
 					const audioURL = URL.createObjectURL (blob);
-					this.sample = new Audio (audioURL),
-					this.sample.load();
+					
+					const audioElement = document.createElement('audio');
+
+					audioElement.setAttribute('controls', true);
+					document.body.appendChild(audioElement);
+
+					const sourceElement = document.createElement('source');
+
+					audioElement.appendChild(sourceElement);
+
+					sourceElement.src = audioURL;
+					
+					this.sample = audioElement;
 				};
 			},
 			toggleRecord: function () {
