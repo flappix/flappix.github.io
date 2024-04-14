@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8" />
+<title>untitled</title>
+<script defer src="tock.min.js"></script>
+<script defer src="recorder.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+	function newTrack (stream) {
+		return {
+			hits: {},
+			sample: new Audio ('sample.wav'),
+			recording: false,
+			chunks: [],
+			init: function() {	
+				this.recorder = new MediaRecorder (stream);
+				this.recorder.ondataavailable = (e) => {
+					this.chunks.push (e.data);
+				};
+				
+				this.recorder.onstop = (e) => {
+					const blob = new Blob (this.chunks, { type: "audio/ogg; codecs=opus" });
+					this.chunks = [];
+					const audioURL = URL.createObjectURL (blob);
+					this.sample.src = audioURL;
+				};
+			},
+			toggleRecord: function () {
+				if (this.recording)
+				{
+					this.recorder.stop();
+				}
+				else
+				{
+					this.recorder.start();
+				}
+				
+				this.recording = !this.recording;
+			}
+		}
+	}
+	
+	function DrumMachine() {
+		return {
+			tracks: [],
+			_init: function() {
+				let audio_context = new AudioContext;
+				let input = navigator.mediaDevices.getUserMedia ( {audio: true}).then ( (stream) => {
+					for (let i=0; i<4; i++)
+					{
+						let track = newTrack (stream);
+						track.init();
+						this.tracks.push (track);
+					}
+				}).catch(function (error) {
+					alert(error)
+				});
+				
+			},
+			resolution: 4,
+			bpm: 90,
+			isPlaying: false,
+			
+			toggle: function (track, pos) {
+				let p = this.pos (pos);
+				if (track.hits[p])
+				{
+					delete track.hits[p];
+				}
+				else
+				{
+					track.hits[p] = true;
+				}
+				
+				console.log (track.hits);
+			}, 
+			pos: function (i) {
+				return (1 / this.resolution) * (i - 1);
+			},
+			
+			play: function() {
+				if (this.isPlaying) {
+					console.log ('start cycle')
+					
+					for (let track of this.tracks)
+					{
+						for  (let hit of Object.keys (track.hits) )
+						{
+							const noteOn = new Tock ( ()=> {
+								track.sample.currentTime = 0;
+								track.sample.play();
+								console.log ('play', hit * 2000)
+							}, 4000 * hit);
+							noteOn.start();
+						}
+					}
+					
+					const timer = new Tock ( ()=> {
+						this.play();
+					}, 4000);
+					timer.start();
+				}
+			},
+		}
+	}
+</script>
+<style>
+	table, td, tr {
+		border: 1px solid black
+	}
+	
+	.active {
+		background-color: red;
+	}
+</style>
+</head>
+
+<body x-data="DrumMachine()">
+	<h1>DrumMachine</h1>
+	<button @click="_init()">Init</button>
+	<button @click="isPlaying = !isPlaying; play()" x-html="isPlaying ? 'stop' : 'play'"></button>
+	<table style="width: 100%; table-layout:fixed;">
+		<template x-for="track in tracks">
+			<tr>
+				<td>
+					<button @click="track.toggleRecord()" x-html="track.recording ? 'stop' : 'record'"></button>
+				</td>
+				<template x-for="i in resolution">
+					<td :class="{active: track.hits[pos(i)]}"
+						@click="toggle (track, i)"></td>
+				</template>
+			</tr>
+		</template>
+	</table>
+
+</body>
+
+</html>
