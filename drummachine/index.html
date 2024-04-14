@@ -24,7 +24,7 @@
 					const blob = new Blob (this.chunks, { type: "audio/wav" });
 					this.chunks = [];
 					const audioURL = URL.createObjectURL (blob);
-					this.sample.src = audioURL;
+					this.sample = new Audio (audioURL),
 					this.sample.load();
 				};
 			},
