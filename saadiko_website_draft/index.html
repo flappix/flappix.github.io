@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<title>untitled</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<script src="https://unpkg.com/alpinejs" defer></script>
+	<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+	<style>
+		html {
+			height: 100%;
+			padding: 0;
+			margin: 0;
+			font-family: "Abel", sans-serif;
+			font-weight: 400;
+			font-style: normal;
+			scroll-behavior: smooth;
+		}
+		body {
+			height: 100%;
+			padding: 0;
+			margin: 0;
+		},
+		
+		.body {
+			
+			
+		}
+		
+		.border {
+			margin: 1rem 0rem 0 0rem;
+			border-bottom: 0.5rem solid black;
+			border-top: 0.5rem solid black;
+			//border-radius: 1em;
+			backdrop-filter: blur(0.5rem) saturate(30%) brightness(110%);
+			-moz-backdrop-filter: blur(0.5rem) saturate(30%) brightness(110%);
+			-webkit-backdrop-filter: blur(0.5rem) saturate(30%) brightness(110%);
+			
+			box-shadow: 0px 10px 5px rgba(0,0,0,0.5),  0px -10px 5px rgba(0,0,0,0.5);
+		}
+		
+		.linkbox {
+			box-shadow: rgba(0, 0, 0, 0.7) 0px 20px 25px;
+			border-radius: 1rem;
+			//border: 0.rem solid black;
+			margin: 1rem 1rem 0rem 0;
+			backdrop-filter: blur(0.3rem) saturate(20%);
+			background: rgba(255,255,255,0.5);
+			-moz-backdrop-filter: blur(0.3rem) saturate(20%);
+			-webkit-backdrop-filter: blur(0.3rem) saturate(20%);
+			cursor: pointer;
+			max-width: 25vw;
+		}
+		
+		.linkbox > div {
+			text-align: center;
+			font-size: 5vh;
+			font-weight: 400;
+		}
+		
+		.red {
+			background: rgb(110,23,0.6);
+			background: linear-gradient(0deg, rgba(110,23,1,0.6) 0%, rgba(168,112,109,0.6) 18%, rgba(144,6,5,0.6) 82%);
+		}
+		.green {
+			background: rgb(29,81,0.6); background: linear-gradient(0deg, rgba(29,81,1,0.6) 0%, rgba(126,168,109,0.6) 18%, rgba(1,98,12,0.6) 82%);
+		}
+		.yellow {
+		}
+		
+		a {
+			text-decoration: none;
+			color: black;
+		}
+		
+		a > img {
+			height: 10vh;
+			margin: 0.5em;
+		}
+		.photo {
+			border-radius: 1rem;
+			box-shadow: 5px 5px 5px rgba(0,0,0,0.5);
+			object-fit: cover;
+			width: 40vw;
+		}
+		
+		.q {
+			font-size: 2em;
+		}
+		
+		h1 {
+			background-color: rgba(255,255,255,0.5);
+			display: inline-block;
+			padding: 1rem;
+			border-radius: 1rem;
+		}
+		
+		
+		.banner {
+			height: 10vh;
+		}
+		@media (max-aspect-ratio: 7/5)  {
+			.navi {
+				flex-direction: column;
+				margin: 0px auto;
+				max-width: 60vw;
+				max-height: 90vh;
+			}
+			
+			.linkbox {
+				max-width: 75vw;
+				margin-bottom: 2rem;
+			}
+		}
+	</style>
+	
+	
+</head>
+
+<body x-data="{show_social_media: true}" @scroll.window="(evt) => show_social_media = window.pageYOffset == 0;">
+	<div class="body" style="background-size: cover; background-image: url(imgs/bg2.jpg);
+			background-repeat: no-repeat;
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			width: 100vw;
+			height: 100vh;
+			-webkit-backface-visibility: hidden;z-index: -1;"></div>
+		<div style="min-height: 125vh;">
+			
+			<div class="border" style="position: sticky; top: 1vh; z-index: 9; background: rgba(255,255,255,0.2);">
+				<img class="banner" src="imgs/banner_final.png" style="display: block; margin: 0px auto;" />
+			</div>
+			
+			<div class="navi" style="display: flex; justify-content: center;  margin-top: 10vh; ">
+				
+				<a href="#aboutus">
+					<div class="linkbox">
+						<img src="imgs/about_us.jpg" style="width: 100%; border-radius: 1rem 1rem 0rem 0rem;" />
+						<div>About us</div>
+					</div>
+				</a>
+				<a href="#gigs">
+					<div class="linkbox">
+						<img src="imgs/gigs.jpg" style="width: 100%; border-radius: 1rem 1rem 0rem 0rem;" />
+						<div>Upcoming gigs<br />
+							<span style="font-size: 0.5em;">Mon 22 June 2024, KiWo</span>
+						</div>
+					</div>
+				</a>
+				<a href="#contact">
+					<div class="linkbox">
+						<img src="imgs/contact.jpg" style="width: 100%; border-radius: 1rem 1rem 0rem 0rem;" />
+						<div>Cont@ct</div>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+		<div id="aboutus">
+			<div class="border" style="padding: 1em; font-size: 2em;">
+				
+				<h1>About us</h1>
+				<div style="width: 50vw; margin: 0px auto; background-color: rgba(255,255,255,0.7); padding: 1rem; border-radius: 1rem;">
+					<span class="q" >&#128630;</span>
+					<div>
+						Saadiko Music ist eine Reise, die von der Tiefe der menschlichen Erfahrung inspirieret ist.<br /><br />
+						Inhaltlich sind die Stücke mit der Pacha Mama verbunden und von den aktuellen friedlich-sozialen Themen geprägt z.B Menschenrechte, Geschichte der Liebe und Freude der Zukunft am Leben.<br /><br />
+						Der Sound ist experimentel und setzt sich aus spirituellen harmonischen Klängen zusammen, in der sich Herz und Partyculture mischen. Gespielt werden Ancestry Roots, Reggae & good vibes Dance music.<br />
+					</div>
+					<span style="display: flex; justify-content: end;" class="q">&#128631;</span><span style="clear: both;"></span>
+				</div>
+			</div>
+		</div>
+		
+		<div id="gigs">
+			<div class="border" style="padding: 1em; font-size: 2em;">
+				
+				<h1>Upcoming gigs</h1>
+				<div style="width: 50vw; margin: 0px auto; background-color: rgba(255,255,255,0.7); padding: 1rem; border-radius: 1rem;">
+					
+					<ul>
+						<li>Mon 22 June 2024, Kiel, 15:00</li>
+						<li>Mon 22 June 2025, Kiel, 15:00</li>
+						<li>Mon 22 June 2026, Kiel, 15:00</li>
+						<li>Mon 22 June 2027, Kiel, 15:00</li>
+					</ul>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div id="contact">
+			<div class="border" style="padding: 1em; font-size: 2em;">
+				<h1>Contact</h1>
+				<div style="width: 50vw; margin: 0px auto; background-color: rgba(255,255,255,0.7); padding: 1rem; border-radius: 1rem;">
+					For booking requests write a message to <br />
+					<center>booking@saadiko.de</center>
+				</div>
+			</div>
+		</div>
+		
+		<div x-transition.duration.500ms x-show="show_social_media" style="position: fixed; bottom: 0px; margin-top: 1em; width: 100%;">
+			<div style="margin: 0px auto; display: flex; justify-content: center; background-color: rgba(0,0,0,0.7); width: fit-content; border-radius: 2rem 2rem 0 0; padding: 0 1rem 0 1rem;">
+				<a href="https://open.spotify.com/artist/1NgPLpWBdhqlqlEqYkSFmZ" target="_blank"><img src="imgs/spotify.png" /></a>
+				<a href="https://www.youtube.com/channel/UCfB_ZAICgcYaIuIlx661eIg" target="_blank"><img src="imgs/youtube.png" /></a>
+				<a href="https://www.facebook.com/saadikomusic" target="_blank"><img src="imgs/facebook.svg" /></a>
+				<a href="https://www.instagram.com/saadikomusic/" target="_blank"><img src="imgs/instagram.png" /></a>
+			</div>
+		</div>
+		
+		<div x-show="!show_social_media" style="margin-top: 1em; width: 100%;">
+			<div style="margin: 0px auto; display: flex; justify-content: center;">
+				<a href="https://open.spotify.com/artist/1NgPLpWBdhqlqlEqYkSFmZ" target="_blank"><img src="imgs/spotify.png" /></a>
+				<a href="https://www.youtube.com/channel/UCfB_ZAICgcYaIuIlx661eIg" target="_blank"><img src="imgs/youtube.png" /></a>
+				<a href="https://www.facebook.com/saadikomusic" target="_blank"><img src="imgs/facebook.svg" /></a>
+				<a href="https://www.instagram.com/saadikomusic/" target="_blank"><img src="imgs/instagram.png" /></a>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
