@@ -14,13 +14,12 @@
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="https://flappix.github.io/web_intonation/" />
 
-		<script type="text/javascript" src="tock.min.js"></script>
 		<script type="text/javascript" src="app.js"></script>
 		<link rel="stylesheet" href="style.css" />
 	</head>
 
 	<body x-data="ScaleApp()" x-on:keydown="key_check_on" x-on:keyup="key_check_off">
-		<div style="display: flex; justify-content: space-between;">
+		<div style="display: flex; justify-content: space-between; align-items: start;">
 			<div style="font-weight: bold; font-size: 2em;">			
 				Musical Tuing Simulator
 				<span style="display: none;">Free online simulator for exploring musical tunings and temperaments. Supports just intonation, equal temperament, pythtagoreian tuning, meantone temperament</span>
@@ -33,7 +32,7 @@
 					<div class="tab" :style="{'z-index': tab == 'midi' ? 2 : 0, 'background-color': tab == 'midi' ? 'white' : '#F0F0F0'}" x-on:click="tab = 'midi'">Midi (<i>experimental</i>)</div>
 				</div>
 				<div style="border: 1px solid black; padding: 0.5em; margin: 0.5em; margin-top: 0; z-index: 1; position: relative; border-radius: 0 0.5em 0.5em 0.5em;" class="box" x-show="tab == 'tuning'">
-					<div style="display: flex; align-items: center;">
+					<div style="display: flex; align-items: center; flex-wrap: wrap;">
 						<div class="setting">
 							<span style="margin-right: 0.2em;">Tuning</span>
 							<select x-model="curr_tuning" x-on:change="curr_notes = createFromTemplate (curr_tuning, curr_scale)">
@@ -56,8 +55,8 @@
 						</div>
 						
 						<div class="setting">
-							Root &nbsp;
-							<select x-model="root.note" x-on:change="root.freq = note2freqMap[root.note];">
+							<span style="margin-right: 0.2em;">Root</span>
+							<select x-model="root.note" x-on:change="root.freq = note2freqMap[root.note];" style="margin-right: 0.2em;">
 								<template x-for="key in midi.scaleNotes">
 									<option x-html="key"  :selected="key == root.note"></option>
 								</template>
@@ -102,14 +101,14 @@
 					</div>
 				</div>
 				<div style="border: 1px solid black; padding: 0.5em; margin: 0.5em; margin-top: 0; z-index: 1; position: relative; border-radius: 0 0.5em 0.5em 0.5em; display: none;" class="box" x-show="tab == 'midi'">
-					<div style="display: flex; align-items: center;">
+					<div style="display: flex; align-items: center; flex-wrap:flex;">
 						<div class="setting">
 							<input type="file" x-on:change="readMidiFile ($el)" style="border: 1px solid black; border-radius: 0.5em; margin: 1em;" />
 							<span x-show="midi.error != null" x-html="midi.error" style="color: red; margin: 1em;"></span>
 						</div>
 						
 						<div class="setting">
-							<span style="white-space: nowrap; cursor: help;" title="Make sure this settings matches the root note of the song.&#010;E.g. if your piece is in C major set this setting to C.&#010;If your piece is in D minor set this setting to D.&#010;If your piece is in E phrygian set the root note to E.&#010;Multiple root notes in one midi file is currently not supported.">
+							<span style="white-space: nowrap; cursor: help;" title="Make sure this settings matches the root note of the key signature in your midi file. E.g. if your piece is in C major set this setting to C. If your piece is in D minor set this setting to D. Multiple key signatures in one midi file is currently not supported.">
 								Root <span style="background-color: #838383; border-radius: 1em; padding: 0.2em; color: white;">?</span>&nbsp;
 							</span>
 							<select x-model="midi.root" x-on:change="calcNoteOffset(); root.note = midi.root; root.freq = note2freqMap[root.note];">
