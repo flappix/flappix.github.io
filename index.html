@@ -1,13 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<title>WebChords</title>
-<meta http-equiv="refresh" content="0; URL=webchords/" />
-</head>
+<html>
+	<head>
+		<script src="x-dump-alpinejs.min.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+		<style>
+			span, div {
+				margin: 0.5rem;
+		</style>
+	</head>
 
-<body>
-
-</body>
-
+	<body x-data="{l: [1,2,3,4]}" style="width: 40vh;">
+		
+		<span x-dump="Math.abs (-2) + 43"></span>
+		<span x-dump="[1,2,3,4].filter ( x => x % 2 == 0)"></span>
+		<span x-dump="'foo' + 'bar'"></span>
+		
+		<!-- reflects dynamic changes -->
+		<div x-dump="l"></div>
+		
+		<!-- will not change after "users" is modified -->
+		<div x-dump="l" static></div>
+		
+		<button x-on:click="l.push (-1)">Add</button>
+		
+		<div x-dump="Array.from(Array(100).keys())"></div>
+		<div x-dump="Array.from(Array(100).keys())" limit="50"></div>
+		<div x-dump="Array.from(Array(100).keys())" limit="-1"></div>
+	</body>
 </html>
