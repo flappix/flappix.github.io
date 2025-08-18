@@ -123,12 +123,21 @@ function App() {
 			this.panel = 'run';
 			this.state = 'not_started';
 		},
+		delete_workout: function (w) {
+			if ( confirm (`Are you sure you want to delete ${this.workouts[w].name} ?`) ) {
+				this.workouts.splice (w, 1);
+				if (this.curr_workout == w) {
+					this.curr_workout--;
+				};
+				this.store();
+			}
+		},
 		cancel_edit_workout: function() {
 			let has_changed = ( this.edit_workout == null && !_.isEqual (this.temp_workout, this.workout_template) ) || // new workout
 							  ( this.edit_workout != null && !_.isEqual ( _.cloneDeep (this.workouts[this.edit_workout]), this.temp_workout ) ); // edit workout
 			if ( !has_changed || confirm ('Are you sure you want to exit the workout editor? Your workout will not be saved') ) {
+				this.curr_workout = localStorage.getItem ('last_workout', 0)
 				this.reset_temp_workout();
-				this.curr_workout = 0;
 				this.panel = 'run';
 				this.state = 'not_started';
 			}
@@ -141,15 +150,19 @@ function App() {
 		get_curr_workout: function() {
 			return this.workouts[this.curr_workout];
 		},
-		get_exercises: function() {
+		get_exercises: function  (workout=null) {
+			if (workout == null) {
+				workout = this.get_curr_workout();
+			}
 			if (this.shuffle) {
-				return this.get_curr_workout().shuffle_exercises;
+				return workout.shuffle_exercises;
 			}
 			// else
-			return this.get_curr_workout().exercises;
+			return workout.exercises;
 		},
 		state: 'not_init',
 		last_time: null,
+		last_countdown: Infinity,
 		run: function() {
 			let time = Date.now();
 			let time_diff = time - this.last_time;
@@ -165,6 +178,7 @@ function App() {
 				this.curr_exercise.remaining_time = this.get_curr_workout().settings.pre_delay * 1000;
 				this.state = 'not_started';
 				this.quit = false;
+				this.last_countdown = Infinity;
 				return;
 			}
 			
@@ -175,33 +189,39 @@ function App() {
 				this.curr_exercise.remaining_time -= time_diff;
 				
 				// countdown
-				if (this.curr_exercise.remaining_time <= (curr_workout.settings.count_down * 1000) && this.curr_exercise.remaining_time > 0) {
+				let remain = Math.round (this.curr_exercise.remaining_time / 1000);
+				if (remain <= curr_workout.settings.count_down && remain > 0) {
 					//this.beep1.play()
-					let count_down = (curr_workout.settings.count_down * 1000);
-					this.readText ( Math.round (this.curr_exercise.remaining_time / 1000) );
+					
+					if (this.last_countdown > remain && remain > 0) {
+						this.readText (remain);
+						this.last_countdown = remain;
+					}
 				}
 				
-				if (this.curr_exercise.remaining_time <= 0) {
+				if (remain <= 0) {
 					
 					if (this.state == 'pre_delay') {
 						this.curr_exercise.period = 'work';
 						//this.beep2.play();
-						this.readText ('go!');
+						this.readText (`go! ${exercises[this.curr_exercise.exercise].name}`);
 						this.state = 'running';
 						this.curr_exercise.remaining_time = this.get_work_period();
 						this.update_progressbar ('exercise', this.curr_exercise.remaining_time);
 						this.update_progressbar ( 'workout', this.getWorkoutDuration (curr_workout) );
 						
-						this.readText (exercises[this.curr_exercise.exercise].name);
+						this.last_countdown = Infinity;
 					}
 					else if (this.curr_exercise.period == 'work' && curr_workout.exercises.length - 1 > this.curr_exercise.exercise) {
 						this.curr_exercise.period = 'rest';
+						this.last_countdown = Infinity;
 						//this.beep2.play();
 						
 						this.readText ('Rest').then ( () => {
 							let next_speak = () => this.readText ('Next exercise: ' + exercises[this.curr_exercise.exercise + 1].name);
 							
-							if ( curr_workout.exercises.length > 1 && curr_workout.exercises.length - 1 > this.curr_exercise.exercise && Math.round (curr_workout.exercises.length / 2) - 1 == this.curr_exercise.exercise )
+							if ( this.get_rest_period (curr_workout,  curr_workout.exercises.length) > 1 && curr_workout.exercises.length - 1 > this.curr_exercise.exercise &&
+								 Math.round (curr_workout.exercises.length / 2) - 1 == this.curr_exercise.exercise )
 							{
 								this.readText ('Half way there').then ( () => next_speak() );
 							}
@@ -215,12 +235,12 @@ function App() {
 					}
 					else { // rest
 						this.curr_exercise.period = 'work';
+						this.last_countdown = Infinity;
 						
 						if (curr_workout.exercises.length - 1 > this.curr_exercise.exercise) {
 							this.curr_exercise.exercise++;
 							//this.beep2.play();
-							this.readText ('go!');
-							this.readText (exercises[this.curr_exercise.exercise].name);
+							this.readText (`go! ${exercises[this.curr_exercise.exercise].name}`);
 							this.curr_exercise.remaining_time = this.get_work_period();
 							this.update_progressbar ('exercise', this.curr_exercise.remaining_time);
 						}
@@ -234,13 +254,14 @@ function App() {
 							this.store();
 							
 							finished = true;
+							this.last_countdown = Infinity;
 						}
 					}
 				}
 			}
 			
 			if (!finished) {
-				setTimeout ( () => { this.run(); }, 1000);
+				setTimeout ( () => { this.run(); }, 10 );
 			}
 		},
 		get_work_period: function (workout = null, exercise = null) {
@@ -250,10 +271,10 @@ function App() {
 			
 			if (exercise == null)
 			{
-				exercise = this.curr_exercise.exercise;
+				exercise = this.get_exercises (workout)[this.curr_exercise.exercise];
 			}
 			
-			return ( workout.exercises[exercise].settings?.work_period ?? workout.settings.work_period ) * 1000;
+			return ( exercise.settings?.work_period ?? workout.settings.work_period ) * 1000;
 		},
 		get_rest_period: function (workout = null, exercise = null) {
 			if (workout == null) {
@@ -265,7 +286,7 @@ function App() {
 				exercise = this.curr_exercise.exercise;
 			}
 			
-			return ( workout.exercises[exercise].settings?.rest_period ?? workout.settings.rest_period ) * 1000;
+			return ( exercise.settings?.rest_period ?? workout.settings.rest_period ) * 1000;
 		},
 		load_workout: function (index) {
 			this.curr_workout = index;
@@ -331,10 +352,9 @@ function App() {
 			localStorage.setItem ('last_workout', this.curr_workout);
 		},
 		getWorkoutDuration: function (workout) {
-			return workout.exercises.reduce ( (sum, x, i) => sum + this.get_work_period (workout, x.exercise) + ( i < workout.exercises.length - 1 ? this.get_rest_period (workout, x.excercise) : 0 ) , 0 );
+			return workout.exercises.reduce ( (sum, x, i) => sum + this.get_work_period (workout, x) + ( i < workout.exercises.length - 1 ? this.get_rest_period (workout, x) : 0 ) , 0 );
 		},
 		update_progressbar: function (type, time) {
-			console.log (type, time);
 			if (type == 'exercise') {
 				if (document.styleSheets[1].cssRules.length > 0) {
 					this.stop_animation ('exercise');
@@ -367,7 +387,6 @@ function App() {
 		stop_animation: function (type) {
 			let style = document.styleSheets[type == 'exercise' ? 1 : 2];
 			if (style.cssRules.length > 0) {
-				console.log ('stop anim 0', type);
 				style.removeRule (0);
 			}
 			
@@ -379,7 +398,6 @@ function App() {
 			
 			let element = document.getElementById (type + '_timer');
 			if (element) {
-				console.log ('stop anim 1', type);
 				element.style.animation = 'none';
 				element.offsetHeight; /* trigger reflow */
 				element.style.animation = null; 
@@ -390,17 +408,22 @@ function App() {
 				  s = Math.floor(e % 60).toString().padStart(2,'0');	
 			return m + ':' + s;
 		},
+		
+		reading: false,
 		readText: function (text, workout=null) {
-			if (workout == null) {
-				workout = this.get_curr_workout();
+			if (!this.reading) {
+				this.reading = true;
+				if (workout == null) {
+					workout = this.get_curr_workout();
+				}
+				
+				let voice = this.voices[this.get_voice (workout.settings.voice)];
+				return Speakit.readText (text, voice.lang, voice.name).then ( () => { this.reading = false; } );
 			}
-			
-			let voice = this.voices[this.get_voice (workout.settings.voice)];
-			return Speakit.readText (text, voice.lang, voice.name);
 		},
 		share_workout: function (workout) {
 			let url = window.location.href.split('?')[0];
-			console.log ( url + '?share_workout=' + encodeURIComponent ( JSON.stringify ( _.omit (workout, ['completed']) ) ) );
+			//console.log ( url + '?share_workout=' + encodeURIComponent ( JSON.stringify ( _.omit (workout, ['completed']) ) ) );
 		},
 		shuffle: false,
 		shuffle_workout: function (workout) {
