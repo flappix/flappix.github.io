@@ -193,7 +193,7 @@ function App() {
 				if (remain <= curr_workout.settings.count_down && remain > 0) {
 					//this.beep1.play()
 					
-					if (this.last_countdown > remain && remain > 0) {
+					if (this.last_countdown > remain && remain > 0 && !this.reading) {
 						this.readText (remain);
 						this.last_countdown = remain;
 					}
@@ -218,7 +218,7 @@ function App() {
 						//this.beep2.play();
 						
 						this.readText ('Rest').then ( () => {
-							let next_speak = () => this.readText ('Next exercise: ' + exercises[this.curr_exercise.exercise + 1].name);
+							let next_speak = () => this.readText (`${this.curr_exercise.exercise < curr_workout.exercises.length - 2 ? 'Next' : 'Last'} exercise: ${exercises[this.curr_exercise.exercise + 1].name}`);
 							
 							if ( this.get_rest_period (curr_workout,  curr_workout.exercises.length) > 1 && curr_workout.exercises.length - 1 > this.curr_exercise.exercise &&
 								 Math.round (curr_workout.exercises.length / 2) - 1 == this.curr_exercise.exercise )
