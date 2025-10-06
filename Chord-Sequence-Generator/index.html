@@ -75,7 +75,7 @@
 					<div x-html="c" style="border: 1px solid black; border-radius: 0.5rem; padding: 0.5rem; margin: 0.5rem;">
 					</div>
 				</template>
-				<a :href="`https://flappix.github.io/webchords/?progression=${app.chord_sequence ( root_note, mode, seq.split (',').map ( s => Number (s) ), start, til_repeats  ? null : length ).join (',')}&beats=4&bpm=120`" target="_blank"><button>Play</button></a>
+				<a :href="`https://flappix.github.io/webchords/?progression=${app.chord_sequence ( root_note, mode, seq.split (',').map ( s => Number (s) ), start, til_repeats  ? null : length ).join (',').replaceAll ('♭', 'b')}&beats=4&bpm=120`" target="_blank"><button>Play</button></a>
 			</div>
 		</template>
 		<template x-if="!app.validate_seq (seq)">
