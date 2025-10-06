@@ -33,8 +33,8 @@ function ChordSequencer() {
 				'b♭': 0, // bb
 				'b': 1, // #####
 			},
-			'natural minor': minor,
-			'harmonic minor': minor
+			'minor Vm': minor,
+			'minor V': minor
 		},
 		chord_scale: {
 			'major': [
@@ -51,11 +51,11 @@ function ChordSequencer() {
 				null,
 				'dim'			// VII diminished
 			],
-			'natural minor': [
+			'minor Vm': [
 				'm',			// I minor
 				null,
 				'dim',			// II dim	
-				'',			// III major
+				'',				// III major
 				null,
 				'm',			// IV minor
 				null,
@@ -65,15 +65,15 @@ function ChordSequencer() {
 				'',				// VII major
 				null
 			],
-			'harmonic minor': [
+			'minor V': [
 				'm',			// I minor
 				null,
 				'dim',			// II dim	
-				'',			// III major
+				'',				// III major
 				null,
 				'm',			// IV minor
 				null,
-				'',			// V major
+				'',				// V major
 				'',				// VI major
 				null,
 				'',				// VII major
@@ -125,24 +125,34 @@ function ChordSequencer() {
 			while ( max_chords != null ? result.length < max_chords : !repeated) {
 				let curr_interval = interval_sequence[interval_sequence_pointer];
 				let l = Object.values (this.interval_map).length;
+				
+				let negative_offset = 1;
+				if (curr_interval < 0) {
+					curr_interval = -curr_interval;
+					negative_offset = -1;
+				}
+				
 				if (curr_interval > 0) {
 					curr_interval = (curr_interval - 1) % l;
 				}
 				
-				if (curr_interval < 0) {
-					curr_interval = ( (l + 1) + (curr_interval % l) ) % l; // build inverted interval
-				}
 				
-				let half_tone_offset = this.interval_map[curr_interval].find (i => this.chord_scale[mode][(chord_scale_pointer + i) % this.chord_scale[mode].length] != null);
+				//console.log ('curr_interval', curr_interval);
+				let half_tone_offset = negative_offset * this.interval_map[curr_interval].find (i => this.chord_scale[mode][this.addCircular (chord_scale_pointer, negative_offset * i, this.chord_scale[mode].length)] != null); //   this.chord_scale[mode][(chord_scale_pointer + i) % this.chord_scale[mode].length] != null);
+				//console.log ('half_tone_offset', half_tone_offset);
+				//console.log ('chord_scale_pointer', chord_scale_pointer, );
+				chord_scale_pointer = this.addCircular (chord_scale_pointer, half_tone_offset, this.chord_scale[mode].length);
+				//console.log ('chord_scale_pointer', chord_scale_pointer);
 				
-				chord_scale_pointer = (chord_scale_pointer + half_tone_offset) % this.chord_scale[mode].length;
-				root_note_pointer = (root_note_pointer + half_tone_offset) % this.notes.length;
 				
+				root_note_pointer = this.addCircular (root_note_pointer, half_tone_offset, this.notes.length);
+				
+				//console.log ('root_note_pointer', root_note_pointer)
 				let note = this.getNote (root_note_pointer, mode, root_note);
 				
 				//console.log ('half_tone_offset', half_tone_offset);
-				//console.log ('root_note_pointer', root_note_pointer)
-				//console.log ('chord_scale_pointer', chord_scale_pointer);
+				
+				//
 				
 				//console.log (`${note}${this.chord_scale[mode][chord_scale_pointer]}`);
 				interval_sequence_pointer = (interval_sequence_pointer + 1) % interval_sequence.length;
@@ -151,6 +161,7 @@ function ChordSequencer() {
 				if ( !remember.includes (r) || max_chords != null ) {
 					remember.push (`${interval_sequence_pointer}_${chord_scale_pointer}`);
 					result.push (`${note}${this.chord_scale[mode][chord_scale_pointer]}`);
+					//console.log (`${note}${this.chord_scale[mode][chord_scale_pointer]}`);
 				}
 				else {
 					repeated = true;
@@ -161,6 +172,13 @@ function ChordSequencer() {
 		},
 		getNote: function (pointer, mode, root_note) {
 			return (!Array.isArray (this.notes[pointer]) ? this.notes[pointer] : this.notes[pointer][this.chord_map[mode][root_note]]).toUpperCase();
+		},
+		addCircular: function (a, b, max) {
+			if (a + b < 0) {
+				return max + (a + b);
+			}
+			// else
+			return (a + b) % max;
 		},
 		validate_seq: function (seq) {
 			return seq.split (',').map ( s => Number (s) ).filter ( s => isNaN (s) ).length == 0;
