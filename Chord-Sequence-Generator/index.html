@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<head>
+	<title>untitled</title>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	<script src="chord_sequencer.js"></script>
+	<style>
+		label {
+			border-radius: 0.5rem;
+			background-color: #DADADA;
+			padding: 0.5rem;
+			margin: 0.5rem;
+		}
+	</style>
+</head>
+
+<body  x-data="{app: ChordSequencer(), mode: 'major', root_note: 'c', seq: '-5', length: 1, til_repeats: true, start: 0}">
+	<h1>Chord Sequence Generator</h1>
+	
+	<label>
+		Mode
+		<select x-model="mode">
+			<template x-for="m in Object.keys (app.chord_map)">
+				<option :value="m" x-html="m"></option>
+			</template>
+		</select>
+	</label>
+	<label>
+		Root note
+		
+		<select x-model="root_note">
+			<template x-for="note in Object.keys (app.chord_map[mode])">
+				<option :value="note" x-html="note"></option>
+			</template>
+		</select>
+	</label>
+	
+	<label>
+		sequence
+		<input type="text" x-model="seq" />
+	</label>
+	
+	<label :style="{'text-decoration': til_repeats ? 'line-through' : 'none'}">
+		Length <input type="number" x-model="length" :disabled="til_repeats" min="1" />
+	</label>
+	
+	<label>Until repeats <input type="checkbox" x-model="til_repeats" /></label>
+	
+	<label>
+		Start on chord
+		<select x-model="start">
+			<template x-for="(v, k) in ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']">
+				<option :value="k" x-html="v"></option>
+			</template>
+		</select>
+	</label>
+	
+	<div style="margin-top: 0.5rem;">
+		<template x-if="app.validate_seq (seq)">
+			<div style="display: flex; align-items: center; flex-wrap: wrap; width: 100vw;"
+			     x-data="{chords: app.chord_sequence ( root_note, mode, seq.split (',').map ( s => Number (s) ), start, til_repeats  ? null : length )}">
+				<template x-for="c in chords">
+					<div x-html="c" style="border: 1px solid black; border-radius: 0.5rem; padding: 0.5rem; margin: 0.5rem;">
+					</div>
+				</template>
+				<a :href="`https://flappix.github.io/webchords/?progression=${chords.join (',')}&beats=4&bpm=120`" target="_blank"><button>Play</button></a>
+			</div>
+		</template>
+		<template x-if="!app.validate_seq (seq)">
+			<div style="color: red;">Invalid sequence</div>
+		</template>
+	</div>
+</body>
+
+</html>
