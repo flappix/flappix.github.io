@@ -110,12 +110,7 @@ function ChordSequencer() {
 						is_note++;
 					}
 				}
-				
-				console.log ('is_note', is_note);
-				
 			}
-			
-			console.log ('start', start, this.chord_scale[mode], this.chord_scale[mode][start]);
 			
 			let root_note_pointer = ( this.notes.findIndex ( i => !Array.isArray (i) ? i == root_note : i.includes (root_note) ) + start ) % this.notes.length;
 			
@@ -165,7 +160,6 @@ function ChordSequencer() {
 			return result;
 		},
 		getNote: function (pointer, mode, root_note) {
-			console.log ('pointer', pointer, this.notes[pointer]);
 			return (!Array.isArray (this.notes[pointer]) ? this.notes[pointer] : this.notes[pointer][this.chord_map[mode][root_note]]).toUpperCase();
 		},
 		validate_seq: function (seq) {

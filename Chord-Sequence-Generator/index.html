@@ -11,6 +11,7 @@
 			background-color: #DADADA;
 			padding: 0.5rem;
 			margin: 0.5rem;
+			display: inline-block;
 		}
 	</style>
 </head>
@@ -18,53 +19,63 @@
 <body  x-data="{app: ChordSequencer(), mode: 'major', root_note: 'c', seq: '-5', length: 1, til_repeats: true, start: 0}">
 	<h1>Chord Sequence Generator</h1>
 	
-	<label>
-		Mode
-		<select x-model="mode">
-			<template x-for="m in Object.keys (app.chord_map)">
-				<option :value="m" x-html="m"></option>
-			</template>
-		</select>
-	</label>
-	<label>
-		Root note
+	<div style="display: flex; flex-wrap: wrap;">
+		<label>
+			Mode
+			<select x-model="mode">
+				<template x-for="m in Object.keys (app.chord_map)">
+					<option :value="m" x-html="m"></option>
+				</template>
+			</select>
+		</label>
+		<label>
+			Root note
+			
+			<select x-model="root_note">
+				<template x-for="note in Object.keys (app.chord_map[mode])">
+					<option :value="note" x-html="note.toUpperCase()"></option>
+				</template>
+			</select>
+		</label>
 		
-		<select x-model="root_note">
-			<template x-for="note in Object.keys (app.chord_map[mode])">
-				<option :value="note" x-html="note"></option>
-			</template>
-		</select>
-	</label>
-	
-	<label>
-		sequence
-		<input type="text" x-model="seq" />
-	</label>
-	
-	<label :style="{'text-decoration': til_repeats ? 'line-through' : 'none'}">
-		Length <input type="number" x-model="length" :disabled="til_repeats" min="1" />
-	</label>
-	
-	<label>Until repeats <input type="checkbox" x-model="til_repeats" /></label>
-	
-	<label>
-		Start on chord
-		<select x-model="start">
-			<template x-for="(v, k) in ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']">
-				<option :value="k" x-html="v"></option>
-			</template>
-		</select>
-	</label>
-	
+		<label>
+			sequence
+			<input type="text" x-model="seq" /><br />
+			<span style="font-size: 0.8rem;">Enter intervals separated by comma, e.g. "2, -5, 3",<br />
+			which translates to "second up, fifth down, third up".</span>
+		</label>
+		
+		<label>
+			<span :style="{'text-decoration': til_repeats ? 'line-through' : 'none'}">Length</span> <input type="number" x-model="length" :disabled="til_repeats" min="1" /><br />
+			<span style="font-size: 0.8rem;">
+				Length of chord progression.<br />
+				Will be ignored when "Until Repeats" is set.
+			</span>
+		</label>
+		
+		<label>
+			Until repeats <input type="checkbox" x-model="til_repeats" /><br />
+			<span style="font-size: 0.8rem;">Stop enlongating chord progression when it starts to repeat itself</span>
+		</label>
+		
+		<label>
+			Start on chord
+			<select x-model="start">
+				<template x-for="(v, k) in ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']">
+					<option :value="k" x-html="v"></option>
+				</template>
+			</select>
+		</label>
+	</div>
+		
 	<div style="margin-top: 0.5rem;">
 		<template x-if="app.validate_seq (seq)">
-			<div style="display: flex; align-items: center; flex-wrap: wrap; width: 100vw;"
-			     x-data="{chords: app.chord_sequence ( root_note, mode, seq.split (',').map ( s => Number (s) ), start, til_repeats  ? null : length )}">
-				<template x-for="c in chords">
+			<div style="display: flex; align-items: center; flex-wrap: wrap; width: 100vw;">
+				<template x-for="c in app.chord_sequence ( root_note, mode, seq.split (',').map ( s => Number (s) ), start, til_repeats  ? null : length )">
 					<div x-html="c" style="border: 1px solid black; border-radius: 0.5rem; padding: 0.5rem; margin: 0.5rem;">
 					</div>
 				</template>
-				<a :href="`https://flappix.github.io/webchords/?progression=${chords.join (',')}&beats=4&bpm=120`" target="_blank"><button>Play</button></a>
+				<a :href="`https://flappix.github.io/webchords/?progression=${app.chord_sequence ( root_note, mode, seq.split (',').map ( s => Number (s) ), start, til_repeats  ? null : length ).join (',')}&beats=4&bpm=120`" target="_blank"><button>Play</button></a>
 			</div>
 		</template>
 		<template x-if="!app.validate_seq (seq)">
