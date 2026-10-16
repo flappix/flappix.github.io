@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>flappix – Free Music and Workout Web Apps</title>
+  <meta name="description" content="Free browser apps by flappix: WebChords (jazz chord progression looper), WebIntonation (musical tuning system simulator) and Talking Workout Trainer (interval timer with voice announcements).">
+  <link rel="canonical" href="https://flappix.github.io/">
+  <meta property="og:title" content="flappix – Free Music and Workout Web Apps">
+  <meta property="og:description" content="Jazz chord looper, tuning system simulator and a talking interval workout timer. Free, in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://flappix.github.io/">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #F2F2F2;
+      --card: #ffffff;
+      --text: #000000;
+      --muted: #505050;
+      --accent: #000000;
+      --border: #E2E2E2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    main { width: 100%; max-width: 480px; }
+    ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+    li {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.3em;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    li:hover, li:focus-within {
+      transform: translateY(-2px);
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 14px 20px -4px, rgba(0, 0, 0, 0.08) 0px 6px 8px -2px;
+    }
+    a { color: inherit; text-decoration: none; outline: none; }
+    a.app { flex: 1; }
+    a.app::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+    a.app strong { display: block; font-size: 1.05rem; }
+    a.app small { color: var(--muted); }
+    .arrow { color: var(--accent); font-size: 1.25rem; transition: transform 0.15s ease; }
+    li:hover .arrow { transform: translateX(3px); }
+    a.repo {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      color: var(--muted);
+      transition: color 0.15s ease;
+    }
+    a.repo:hover, a.repo:focus-visible { color: var(--accent); }
+    a.repo svg { width: 1.4rem; height: 1.4rem; fill: currentColor; }
+  </style>
+</head>
+<body>
+  <svg style="display: none;">
+    <symbol id="gh" viewBox="0 0 16 16"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></symbol>
+  </svg>
+  <main>
+    <ul>
+      <li><a class="app" href="webchords/"><strong>WebChords</strong><small>Play and loop jazz chord progressions</small></a><a class="repo" href="https://github.com/flappix/webchords" title="WebChords on GitHub" aria-label="WebChords on GitHub"><svg aria-hidden="true"><use href="#gh"/></svg></a><span class="arrow" aria-hidden="true">→</span></li>
+      <li><a class="app" href="web_intonation/"><strong>Web Intonation</strong><small>Hear and compare musical tuning systems</small></a><a class="repo" href="https://github.com/flappix/web_intonation" title="Web Intonation on GitHub" aria-label="Web Intonation on GitHub"><svg aria-hidden="true"><use href="#gh"/></svg></a><span class="arrow" aria-hidden="true">→</span></li>
+      <li><a class="app" href="talking-workout-trainer/"><strong>Talking Workout Trainer</strong><small>Interval timer with voice announcements</small></a><a class="repo" href="https://github.com/flappix/talking-workout-trainer" title="Talking Workout Trainer on GitHub" aria-label="Talking Workout Trainer on GitHub"><svg aria-hidden="true"><use href="#gh"/></svg></a><span class="arrow" aria-hidden="true">→</span></li>
+    </ul>
+  </main>
+</body>
+</html>
